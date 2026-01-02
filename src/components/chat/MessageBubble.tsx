@@ -39,30 +39,30 @@ export function MessageBubble({
     >
       {/* Header with avatar, name, time */}
       {showAvatar && (
-        <div className={`flex items-center gap-2 mb-1 ${isOwn ? 'justify-end' : 'justify-start'}`}>
+        <div className={`flex items-center mb-1 ${isOwn ? 'justify-end' : 'justify-start'}`}>
           {!isOwn && (
             <Avatar
               src={sender.avatar}
               name={sender.displayName}
               size="xs"
-              className="flex-shrink-0"
+              className="flex-shrink-0 mr-2"
             />
           )}
-          <span className="text-sm font-semibold text-white">
+          <span className="text-sm font-semibold text-white mr-2">
             {sender.displayName}
           </span>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-slate-500 mr-2">
             {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
           </span>
           {message.isEdited && (
-            <span className="text-xs text-slate-500">(edited)</span>
+            <span className="text-xs text-slate-500 mr-2">(edited)</span>
           )}
           {isOwn && (
             <Avatar
               src={sender.avatar}
               name={sender.displayName}
               size="xs"
-              className="flex-shrink-0"
+              className="flex-shrink-0 ml-2"
             />
           )}
         </div>
