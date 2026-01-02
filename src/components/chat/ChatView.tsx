@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useMessageStore, useChannelStore, useAuthStore } from '../../stores';
+import { Menu, MessageCircle } from 'lucide-react';
+import { useMessageStore, useChannelStore, useAuthStore, useUIStore } from '../../stores';
 import { ChatHeader } from './ChatHeader';
 import { MessageBubble } from './MessageBubble';
 import { MessageInput } from './MessageInput';
@@ -113,12 +114,36 @@ export function ChatView() {
     });
   }, []);
 
+  const { toggleSidebar } = useUIStore();
+
   if (!activeChannel) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-slate-900">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">Welcome to Namaskar</h2>
-          <p className="text-slate-400">Select a channel to start messaging</p>
+      <div className="flex-1 flex flex-col bg-slate-900">
+        {/* Mobile header with menu */}
+        <div className="flex items-center px-4 py-3 border-b border-slate-800 md:hidden">
+          <button
+            onClick={toggleSidebar}
+            className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <h1 className="ml-2 font-semibold text-white">Namaskar</h1>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center px-4">
+            <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-4">
+              <MessageCircle className="w-8 h-8 text-indigo-500" />
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">Welcome to Namaskar</h2>
+            <p className="text-slate-400 mb-4">Select a channel to start messaging</p>
+            <button
+              onClick={toggleSidebar}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors md:hidden"
+            >
+              Open Menu
+            </button>
+          </div>
         </div>
       </div>
     );

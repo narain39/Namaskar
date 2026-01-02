@@ -1,6 +1,6 @@
 import { Hash, Lock, ChevronDown, Plus, Users, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
-import { useChannelStore } from '../../stores';
+import { useChannelStore, useUIStore } from '../../stores';
 import { Avatar } from '../ui';
 import type { Channel, ChannelType } from '../../types';
 
@@ -13,15 +13,15 @@ interface ChannelItemProps {
 function ChannelIcon({ type }: { type: ChannelType }) {
   switch (type) {
     case 'public':
-      return <Hash className="w-4 h-4 text-slate-400" />;
+      return <Hash className="w-4 h-4 text-slate-400 flex-shrink-0" />;
     case 'private':
-      return <Lock className="w-4 h-4 text-slate-400" />;
+      return <Lock className="w-4 h-4 text-slate-400 flex-shrink-0" />;
     case 'direct':
-      return <MessageSquare className="w-4 h-4 text-slate-400" />;
+      return <MessageSquare className="w-4 h-4 text-slate-400 flex-shrink-0" />;
     case 'group':
-      return <Users className="w-4 h-4 text-slate-400" />;
+      return <Users className="w-4 h-4 text-slate-400 flex-shrink-0" />;
     default:
-      return <Hash className="w-4 h-4 text-slate-400" />;
+      return <Hash className="w-4 h-4 text-slate-400 flex-shrink-0" />;
   }
 }
 
@@ -42,10 +42,7 @@ function ChannelItem({ channel, isActive, onClick }: ChannelItemProps) {
       `}
     >
       {isDirect ? (
-        <Avatar
-          name={channel.name}
-          size="xs"
-        />
+        <Avatar name={channel.name} size="xs" className="flex-shrink-0" />
       ) : (
         <ChannelIcon type={channel.type} />
       )}
@@ -53,7 +50,7 @@ function ChannelItem({ channel, isActive, onClick }: ChannelItemProps) {
         {channel.name}
       </span>
       {channel.unreadCount > 0 && !channel.isMuted && (
-        <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center">
+        <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
           {channel.unreadCount > 99 ? '99+' : channel.unreadCount}
         </span>
       )}
@@ -78,11 +75,11 @@ function ChannelCategory({ title, channels, activeChannelId, onChannelSelect, on
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center gap-1 px-2 py-1 text-xs font-semibold text-slate-400 uppercase tracking-wide hover:text-slate-200"
       >
-        <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? '' : '-rotate-90'}`} />
+        <ChevronDown className={`w-3 h-3 transition-transform flex-shrink-0 ${isExpanded ? '' : '-rotate-90'}`} />
         <span className="flex-1 text-left">{title}</span>
         {onAddChannel && (
           <Plus
-            className="w-4 h-4 hover:text-white"
+            className="w-4 h-4 hover:text-white flex-shrink-0"
             onClick={(e) => {
               e.stopPropagation();
               onAddChannel();
@@ -108,6 +105,12 @@ function ChannelCategory({ title, channels, activeChannelId, onChannelSelect, on
 
 export function ChannelList() {
   const { channels, activeChannel, setActiveChannel, activeWorkspace } = useChannelStore();
+  const { closeSidebarOnMobile } = useUIStore();
+
+  const handleChannelSelect = (channel: Channel) => {
+    setActiveChannel(channel);
+    closeSidebarOnMobile();
+  };
 
   const publicChannels = channels.filter((ch) => ch.type === 'public' && ch.workspaceId === activeWorkspace?.id);
   const privateChannels = channels.filter((ch) => ch.type === 'private' && ch.workspaceId === activeWorkspace?.id);
@@ -121,7 +124,7 @@ export function ChannelList() {
             title="Channels"
             channels={publicChannels}
             activeChannelId={activeChannel?.id}
-            onChannelSelect={setActiveChannel}
+            onChannelSelect={handleChannelSelect}
             onAddChannel={() => console.log('Add channel')}
           />
           {privateChannels.length > 0 && (
@@ -129,7 +132,7 @@ export function ChannelList() {
               title="Private Channels"
               channels={privateChannels}
               activeChannelId={activeChannel?.id}
-              onChannelSelect={setActiveChannel}
+              onChannelSelect={handleChannelSelect}
             />
           )}
         </>
@@ -138,7 +141,7 @@ export function ChannelList() {
         title="Direct Messages"
         channels={directMessages}
         activeChannelId={activeChannel?.id}
-        onChannelSelect={setActiveChannel}
+        onChannelSelect={handleChannelSelect}
         onAddChannel={() => console.log('Add DM')}
       />
     </div>
