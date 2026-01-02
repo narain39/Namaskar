@@ -32,7 +32,7 @@ function ChannelItem({ channel, isActive, onClick }: ChannelItemProps) {
     <button
       onClick={onClick}
       className={`
-        w-full flex items-center gap-2 px-2 py-1.5 rounded-md
+        w-full flex items-center px-2 py-1.5 rounded-md
         transition-colors duration-100
         ${isActive
           ? 'bg-slate-700 text-white'
@@ -42,9 +42,9 @@ function ChannelItem({ channel, isActive, onClick }: ChannelItemProps) {
       `}
     >
       {isDirect ? (
-        <Avatar name={channel.name} size="xs" className="flex-shrink-0" />
+        <Avatar name={channel.name} size="xs" className="flex-shrink-0 mr-2" />
       ) : (
-        <ChannelIcon type={channel.type} />
+        <span className="mr-2"><ChannelIcon type={channel.type} /></span>
       )}
       <span className="flex-1 text-left text-sm truncate font-medium">
         {channel.name}

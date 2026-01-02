@@ -154,7 +154,7 @@ export function MessageInput({
           placeholder={placeholder}
           disabled={disabled}
           rows={1}
-          className="flex-1 min-w-0 px-4 py-2 bg-slate-800 border border-slate-700 rounded-2xl text-white placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
+          className="flex-1 min-w-0 px-4 py-3 min-h-[44px] bg-slate-800 border border-slate-700 rounded-2xl text-white placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
         />
 
         {message.trim() || attachments.length > 0 ? (

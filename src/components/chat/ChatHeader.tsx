@@ -47,11 +47,9 @@ export function ChatHeader({
         )}
         <div className="min-w-0">
           <h2 className="font-semibold text-white truncate">{channel.name}</h2>
-          {channel.description && (
-            <p className="text-xs text-slate-400 truncate">
-              {channel.description}
-            </p>
-          )}
+          <p className="text-xs text-slate-400 truncate">
+            {channel.description || `v${__COMMIT_HASH__}`}
+          </p>
         </div>
       </div>
 
