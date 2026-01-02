@@ -30,77 +30,80 @@ export function MessageBubble({
 
   return (
     <div
-      className={`group flex gap-3 px-4 py-1 hover:bg-slate-800/30 ${
-        isOwn ? 'flex-row-reverse' : ''
-      }`}
+      className={`group px-4 py-2 hover:bg-slate-800/30 ${isOwn ? 'text-right' : 'text-left'}`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => {
         setShowActions(false);
         setShowEmojiPicker(false);
       }}
     >
-      {showAvatar ? (
-        <Avatar
-          src={sender.avatar}
-          name={sender.displayName}
-          size="sm"
-          status={sender.status}
-        />
-      ) : (
-        <div className="w-8" />
-      )}
-
-      <div className={`flex-1 max-w-[75%] ${isOwn ? 'items-end' : 'items-start'}`}>
-        {showAvatar && (
-          <div className={`flex items-center gap-2 mb-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
-            <span className="text-sm font-semibold text-white">
-              {sender.displayName}
-            </span>
-            <span className="text-xs text-slate-500">
-              {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
-            </span>
-            {message.isEdited && (
-              <span className="text-xs text-slate-500">(edited)</span>
-            )}
-          </div>
-        )}
-
-        <div className="relative">
-          <div
-            className={`
-              inline-block px-4 py-2 rounded-2xl
-              ${isOwn
-                ? 'bg-indigo-600 text-white rounded-br-md'
-                : 'bg-slate-700 text-white rounded-bl-md'
-              }
-            `}
-          >
-            <p className="text-sm whitespace-pre-wrap break-words">
-              {message.content}
-            </p>
-          </div>
-
-          {/* Reactions */}
-          {message.reactions && message.reactions.length > 0 && (
-            <div className={`flex flex-wrap gap-1 mt-1 ${isOwn ? 'justify-end' : ''}`}>
-              {message.reactions.map((reaction) => (
-                <button
-                  key={reaction.emoji}
-                  onClick={() => onReaction?.(message.id, reaction.emoji)}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-xs"
-                >
-                  <span>{reaction.emoji}</span>
-                  <span className="text-slate-400">{reaction.count}</span>
-                </button>
-              ))}
-            </div>
+      {/* Header with avatar, name, time */}
+      {showAvatar && (
+        <div className={`flex items-center gap-2 mb-1 ${isOwn ? 'justify-end' : 'justify-start'}`}>
+          {!isOwn && (
+            <Avatar
+              src={sender.avatar}
+              name={sender.displayName}
+              size="xs"
+              className="flex-shrink-0"
+            />
+          )}
+          <span className="text-sm font-semibold text-white">
+            {sender.displayName}
+          </span>
+          <span className="text-xs text-slate-500">
+            {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+          </span>
+          {message.isEdited && (
+            <span className="text-xs text-slate-500">(edited)</span>
+          )}
+          {isOwn && (
+            <Avatar
+              src={sender.avatar}
+              name={sender.displayName}
+              size="xs"
+              className="flex-shrink-0"
+            />
           )}
         </div>
+      )}
+
+      {/* Message bubble */}
+      <div className={`${isOwn ? 'pl-12' : 'pr-12'}`}>
+        <div
+          className={`
+            inline-block px-4 py-2 rounded-2xl max-w-[85%]
+            ${isOwn
+              ? 'bg-indigo-600 text-white rounded-br-sm'
+              : 'bg-slate-700 text-white rounded-bl-sm'
+            }
+          `}
+        >
+          <p className="text-sm whitespace-pre-wrap break-words text-left">
+            {message.content}
+          </p>
+        </div>
+
+        {/* Reactions */}
+        {message.reactions && message.reactions.length > 0 && (
+          <div className={`flex flex-wrap gap-1 mt-1 ${isOwn ? 'justify-end' : 'justify-start'}`}>
+            {message.reactions.map((reaction) => (
+              <button
+                key={reaction.emoji}
+                onClick={() => onReaction?.(message.id, reaction.emoji)}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-xs"
+              >
+                <span>{reaction.emoji}</span>
+                <span className="text-slate-400">{reaction.count}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Action buttons */}
+      {/* Action buttons - only show on hover/desktop */}
       {showActions && (
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className={`hidden md:flex items-center gap-0.5 mt-1 ${isOwn ? 'justify-end' : 'justify-start'}`}>
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="p-1.5 rounded hover:bg-slate-700 text-slate-400 hover:text-white"
@@ -133,7 +136,7 @@ export function MessageBubble({
 
           {/* Quick emoji picker */}
           {showEmojiPicker && (
-            <div className="absolute top-full left-0 mt-1 p-2 bg-slate-800 rounded-lg shadow-lg flex gap-1 z-10">
+            <div className="absolute mt-1 p-2 bg-slate-800 rounded-lg shadow-lg flex gap-1 z-10">
               {quickReactions.map((emoji) => (
                 <button
                   key={emoji}
