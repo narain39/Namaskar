@@ -5,6 +5,9 @@ import { useWebSocket, useNotifications } from './hooks';
 import { useAuthStore, useChannelStore } from './stores';
 import type { User, Channel, Workspace } from './types';
 
+// App version for tracking deployments
+export const APP_VERSION = '0.1.0';
+
 // Demo data for initial state
 const demoUser: User = {
   id: 'user-1',
